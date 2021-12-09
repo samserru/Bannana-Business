@@ -51,7 +51,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		// image smaller, so the bigger the scale, the smaller the image will be.
 		counter = 0;
 		cans = new ArrayList<Item>();
-		sprite = new Sprite(100, 100);			
+		sprite = new Sprite(background1.getHeight()+190, background1.getHeight()-60);			
 		// The Sprite constuctor has two parameter - - the x coordinate and y coordinate
 
 		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
