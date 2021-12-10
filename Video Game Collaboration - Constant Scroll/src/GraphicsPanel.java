@@ -13,6 +13,8 @@ import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.util.ArrayList;
@@ -41,7 +43,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// the path for the image.
 
 
-	public GraphicsPanel(){
+	public GraphicsPanel() throws IOException{
+		LeaderBoard leaderBoard1 = new LeaderBoard();
+		
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
 		mover = true;
@@ -63,6 +67,17 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		// action performed method every 5 milliseconds once the
 		// timer is started. You can change how frequently this
 		// method is called by changing the first parameter.
+
+		//LEADERBOARD
+		LeaderBoard.addScore("Bennett", "2");
+		ArrayList<String> Top10 = LeaderBoard.getTop10();
+		for(String s:Top10) {
+			System.out.println(s);
+		}
+
+		
+		//Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag  24 9 9 9 9 8 8 7 7 7 Owen Blake Owen Owen Luke Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag 24 9 9 9 9 8 8 7 7 7 6 6 6 6 6 6 6 6 5 5 Abella Blake Luke Sam Abella Blake Luke Sam Blake Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag
+
 		timer.start();
 		this.setFocusable(true);     // for keylistener
 		this.addKeyListener(this);
@@ -116,15 +131,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 		// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 		// item, the item will get smaller.
-		if(sprite.collision(item) && sprite.getY() < item.getY()) {
+		if(sprite.collision(item)) {
 			System.out.println("stop");
 		}
-		if (mover) {
-			sprite.walkRight();
-		}
-		
-		sprite.run();
-		sprite.x_coordinate-=5;
+
+		sprite.x_direction = 2;
+
 		if(sprite.upPressed&&sprite.y_coordinate>0)
 			sprite.y_coordinate-=2;
 		if(sprite.downPressed&&sprite.y_coordinate<200)
@@ -144,7 +156,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 		if(e.getKeyCode() == KeyEvent.VK_UP) {
 			sprite.upPressed = true;
-			
+
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_DOWN && !(sprite.collision(item) && sprite.getY() < item.getY()))
 			sprite.downPressed = true;

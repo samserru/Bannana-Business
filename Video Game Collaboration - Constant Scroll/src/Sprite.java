@@ -22,7 +22,7 @@ public class Sprite {
 	// 1 idle facing right, 2 walking right, 5 running right
 	public boolean upPressed;
 	public boolean downPressed;
-	
+
 	protected int y_direction; // 0 : not moving
 	// - 1 : up
 	// 1 : down
@@ -43,7 +43,7 @@ public class Sprite {
 		this.x_coordinate = x_coordinate; // Initial coordinates for the Sprite.
 		this.y_coordinate = y_cordinate;
 
-		x_direction =1; // Initial directions - 1 for x means that the Sprite is facing to
+		x_direction =2; // Initial directions - 1 for x means that the Sprite is facing to
 		// the right but no moving.
 		y_direction = 0; // 0 for y direction means it's not moving vertically.
 
@@ -99,11 +99,9 @@ public class Sprite {
 	//   the Sprite,.
 	public void move(Component c){
 		// move to the right or left - speed will be positive
-		if (!isDead && ((x_coordinate > - (2*imageResource.getImageOffset()) && x_direction == -2 || x_direction == -5) ||
-				(x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset() < c.getWidth() && (x_direction == 2 || x_direction == 5) )))
-			x_coordinate += (x_direction);
+
 		// jump
-		else if (!isDead && (y_coordinate > 0 && y_direction == -1) ||
+		if (!isDead && (y_coordinate > 0 && y_direction == -1) ||
 				(y_coordinate + imageResource.getImage().getIconWidth() < c.getHeight() && y_direction == 1 ))
 			y_coordinate += (y_direction);
 
@@ -136,7 +134,7 @@ public class Sprite {
 		x_direction = -2;
 	}
 	public void run() {
-		x_direction = (x_direction < 0) ? -5 : 5;
+		x_direction = 0;
 	}
 
 	// Methods that deal with vertical movement. These functions don't actually move the Sprite, they set the direction.
@@ -161,7 +159,7 @@ public class Sprite {
 		isDead = false;
 	}
 
-
+	 
 	// method: draw
 	// description: This method is used to draw the image onto the GraphicsPanel.  You shouldn't need to
 	// modify this method.

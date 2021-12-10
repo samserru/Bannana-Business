@@ -3,6 +3,8 @@
 // Date: 1/27/2020
 // Description: This class contains the main method for this project. You shouldn't modify this class.
 //              This class must be selected when you run your project.
+import java.io.IOException;
+
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javazoom.jl.player.Player;
@@ -10,7 +12,7 @@ import javazoom.jl.player.Player;
 
 public class GraphicsMain extends JFrame{
 
-	public static void main(String[] args) {
+	public static void main(String[] args) throws IOException {
 		
 		new Thread(new Runnable() {
     		@Override
