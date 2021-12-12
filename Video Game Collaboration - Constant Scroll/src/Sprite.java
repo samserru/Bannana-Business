@@ -25,7 +25,10 @@ public class Sprite {
 
 	protected int y_direction; // 0 : not moving
 	// - 1 : up
-	// 1 : down
+		// 1 : down
+	protected float gravity;
+	public boolean gravityActive;
+	protected double gravityMultiplier;
 
 	protected int jumpCounter; // jumping animation takes several frames. This counter is used to keep track
 	// of this process. If the Sprite isn't jumping this should be set to -1.
@@ -39,7 +42,8 @@ public class Sprite {
 	// parameters: x_coordinate - the initial x-coordinate for Sprite.
 	//   y_coordinate - the initial y-coordinate for Sprite.
 	public Sprite(int x_coordinate, int y_cordinate){
-
+		gravity = 3;
+		gravityMultiplier = 0.1;
 		this.x_coordinate = x_coordinate; // Initial coordinates for the Sprite.
 		this.y_coordinate = y_cordinate;
 
@@ -101,7 +105,11 @@ public class Sprite {
 		// move to the right or left - speed will be positive
 
 		// jump
-		if (!isDead && (y_coordinate > 0 && y_direction == -1) ||
+		if(!isDead && (y_coordinate > 0 && y_direction == -1 && gravityActive)){
+			y_coordinate -= gravity;
+			gravity-=0.5;
+		}
+		else if (!isDead && (y_coordinate > 0 && y_direction == -1) ||
 				(y_coordinate + imageResource.getImage().getIconWidth() < c.getHeight() && y_direction == 1 ))
 			y_coordinate += (y_direction);
 

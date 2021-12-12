@@ -125,7 +125,7 @@ public class Item{
 	//            that you can figure out the dimensions and not go off of the panel when it moves.		   
 	public void move(Component c){
 		// move to the right or left - speed will be positive
-		if (((x_coordinate > 0 && x_direction == -2) || (x_coordinate < c.getWidth() && x_direction == 2 )))
+		if (((x_coordinate >= -60 && x_direction == -2) || (x_coordinate < c.getWidth() && x_direction == 2 )))
 			x_coordinate += (x_direction);
 		// move up or down
 		else if ((y_coordinate > 0 && y_direction == -1) || (y_coordinate < c.getHeight() && y_direction == 1 ))

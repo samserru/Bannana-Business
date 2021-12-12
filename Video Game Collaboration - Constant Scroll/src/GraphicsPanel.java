@@ -29,7 +29,6 @@ import javax.swing.Timer;
 import java.awt.Rectangle;
 
 public class GraphicsPanel extends JPanel implements KeyListener{
-
 	private Timer timer; // The timer is used to move objects at a consistent time interval.
 	private Boolean mover;
 	private Background background1; // The background object will display a picture in the background.
@@ -38,6 +37,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Sprite sprite; // create a Sprite object
 	private Item item;
 	private int counter;
+	private int score;
+	private double scoreMultiplier;
+	
 	// This declares an Item object. You can make a Item display
 	// pretty much any image that you would like by passing it
 	// the path for the image.
@@ -46,6 +48,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public GraphicsPanel() throws IOException{
 		LeaderBoard leaderBoard1 = new LeaderBoard();
 		
+		score = 1;
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
 		mover = true;
@@ -75,7 +78,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			System.out.println(s);
 		}
 
-		
+
 		//Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag  24 9 9 9 9 8 8 7 7 7 Owen Blake Owen Owen Luke Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag 24 9 9 9 9 8 8 7 7 7 6 6 6 6 6 6 6 6 5 5 Abella Blake Luke Sam Abella Blake Luke Sam Blake Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag
 
 		timer.start();
@@ -94,7 +97,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		background1.draw(this, g);
 		background2.draw(this, g);
 
-		item.draw(g2, this);
+		
 		sprite.draw(g2, this);
 		for (int i =0; i<cans.size();i++) {
 			cans.get(i).draw(g2, this);
@@ -116,30 +119,48 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public void clock(){
 		// You can move any of your objects by calling their move methods.
 		sprite.move(this);
-
+		
 		background1.move();
 		background2.move();
 
 		counter++;
 		if (counter%1000==0) {
-			cans.add(new Item(background1.getWidth(), (int)(Math.random()*background1.getHeight()) + 1, "images/objects/box.png", 4));
+			cans.add(new Item(background1.getWidth(), (int)(Math.random()*background1.getHeight()-50) + 1, "images/objects/box.png", 4));
 		}
 
 		for (int i = 0; i <cans.size();i++) {
 
 			cans.get(i).move(this);
+			if(cans.get(i).x_coordinate<=-60) {
+				cans.remove(i);
+			}
 		}
 		// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 		// item, the item will get smaller.
-		if(sprite.collision(item)) {
-			System.out.println("stop");
+		for(Item s: cans) {
+			if(sprite.collision(s)) {
+				System.out.println("stop");
+			}
 		}
-
 		sprite.x_direction = 2;
-
-		if(sprite.upPressed&&sprite.y_coordinate>0)
+		if(sprite.gravityActive){
+			if(sprite.y_coordinate<=0) {
+				sprite.y_coordinate=1;
+				sprite.gravity=0;
+			}
+			sprite.y_coordinate-=sprite.gravity;
+			sprite.gravity-=sprite.gravityMultiplier;
+			
+			if(sprite.y_coordinate>background1.getHeight()-200) {
+				sprite.y_coordinate=background1.getHeight()-200;
+				sprite.gravity=3;
+				sprite.gravityActive = false;
+			}
+			
+		}
+		else if(sprite.upPressed&&sprite.y_coordinate>0)
 			sprite.y_coordinate-=2;
-		if(sprite.downPressed&&sprite.y_coordinate<200)
+		else if(sprite.downPressed&&sprite.y_coordinate<200)
 			sprite.y_coordinate+=2;
 		this.repaint();
 	}
@@ -160,13 +181,15 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 		else if(e.getKeyCode() == KeyEvent.VK_DOWN && !(sprite.collision(item) && sprite.getY() < item.getY()))
 			sprite.downPressed = true;
-		else if(e.getKeyCode() == KeyEvent.VK_SPACE)
-			sprite.run();
+		else if(e.getKeyCode() == KeyEvent.VK_SPACE) {
+			sprite.gravityActive = true;
+			sprite.gravityMultiplier = 0.04;
+		}
 		else if(e.getKeyCode() == KeyEvent.VK_J)
 			sprite.jump();
 		else if(e.getKeyCode() == KeyEvent.VK_D) {
 			playSound("src/sounds/bump.WAV");
-			sprite.die();
+			//sprite.die();
 		}
 	}
 
@@ -210,7 +233,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(e.getKeyCode() ==  KeyEvent.VK_DOWN)
 			sprite.downPressed = false;
 		else if(e.getKeyCode() ==  KeyEvent.VK_SPACE)
-			sprite.slowDown();
+			sprite.gravityMultiplier = 0.1;
 
 	}
 
