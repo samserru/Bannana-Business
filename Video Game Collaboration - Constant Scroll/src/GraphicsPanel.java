@@ -8,6 +8,7 @@
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.KeyEvent;
@@ -37,7 +38,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Sprite sprite; // create a Sprite object
 	private Item item;
 	private int counter;
-	private int score;
+	private double score;
 	private double scoreMultiplier;
 	
 	// This declares an Item object. You can make a Item display
@@ -48,7 +49,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public GraphicsPanel() throws IOException{
 		LeaderBoard leaderBoard1 = new LeaderBoard();
 		
-		score = 1;
+		score = 0;
+		scoreMultiplier = 1.02;
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
 		mover = true;
@@ -105,6 +107,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		g2.setColor(Color.RED);
 		Rectangle r = sprite.getBounds();
 		g2.draw(r);
+		g2.setFont(new Font("Purisa", Font.BOLD, 30));
+		g2.setColor(Color.PINK);
+		g2.drawString(Integer.toString((int)score), 1240,30);
 
 
 
@@ -117,6 +122,11 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// of one of your characters in this method so that it moves as time changes.  After you update the
 	// coordinates you should repaint the panel.
 	public void clock(){
+		if(counter%100==0) {
+			score++;
+			score*=scoreMultiplier;
+			
+		}
 		// You can move any of your objects by calling their move methods.
 		sprite.move(this);
 		
@@ -124,11 +134,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		background2.move();
 
 		counter++;
-		if (counter%1000==0) {
+		
+		if (counter%700==0) {
 			cans.add(new Item(background1.getWidth(), (int)(Math.random()*background1.getHeight()-50) + 1, "images/objects/box.png", 4));
 		}
 
-		for (int i = 0; i <cans.size();i++) {
+		for (int i = cans.size()-1 ; i > 0;i--) {
 
 			cans.get(i).move(this);
 			if(cans.get(i).x_coordinate<=-60) {

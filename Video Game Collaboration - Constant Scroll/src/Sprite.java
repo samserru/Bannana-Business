@@ -73,13 +73,13 @@ public class Sprite {
 	// return: A Rectangle - This rectangle would be like drawing a rectangle around the Character's image.
 	public Rectangle getBounds(){
 		if(x_direction < 0)
-			return new Rectangle(x_coordinate + imageResource.getImageOffset(), y_coordinate,
-					imageResource.getImage().getIconWidth() - imageResource.getImageOffset()/2,
-					imageResource.getImage().getIconHeight());
+			return new Rectangle(x_coordinate + imageResource.getImageOffset(), y_coordinate-70,
+					imageResource.getImage().getIconWidth()-70 - imageResource.getImageOffset()/2,
+					imageResource.getImage().getIconHeight()-70);
 		else
-			return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset(), y_coordinate,
-					imageResource.getImage().getIconWidth() - imageResource.getImageOffset()/2,
-					imageResource.getImage().getIconHeight());
+			return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset(), y_coordinate+15,
+					imageResource.getImage().getIconWidth()-20 - imageResource.getImageOffset()/2,
+					imageResource.getImage().getIconHeight()-20);
 	}
 
 	// method: getX
