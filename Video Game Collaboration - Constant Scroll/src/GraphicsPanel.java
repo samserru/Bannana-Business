@@ -41,7 +41,6 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int gameState;
 	private int counter;
 	private int score;
-	private double scoreMultiplier;
 	private int levelUp;
 	private boolean dead;
 
@@ -128,6 +127,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
 			g2.draw(r);
+			g2.setColor(Color.pink);
+			g2.setFont(new Font("Segoe Script", Font.BOLD + Font.ITALIC, 30));
+			g2.drawString(String.valueOf((int)score), 1250, 30);
 		}
 
 
@@ -140,6 +142,10 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// of one of your characters in this method so that it moves as time changes.  After you update the
 	// coordinates you should repaint the panel.
 	public void clock(){
+		if(counter%200==0) {
+			score++;
+			score*=1.02;
+		}
 		// You can move any of your objects by calling their move methods.
 		sprite.move(this);
 
