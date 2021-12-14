@@ -65,7 +65,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		counter = 0;
 		cans = new ArrayList<Item>();
 		fireHydrants = new ArrayList<Item>();
-		sprite = new Sprite(background1.getWidth()/2-190, (int)(Math.random()*100)+100);
+		sprite = new Sprite(background1.getWidth()/2-190, background1.getHeight()-200);
 		// The Sprite constuctor has two parameter - - the x coordinate and y coordinate
 
 		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
@@ -160,7 +160,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.drawString("Press ESC to go back", 30, 30);
 			try {
 				int x = 400;
-				int y = 100;
+				int y = 125;
 				int count=0;
 				
 				leaderBoard.updateLeaderBoard();
@@ -172,7 +172,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 						y+=40;
 						count++;
 					}
-					y=100;
+					y=125;
 					x+=400;
 				}
 

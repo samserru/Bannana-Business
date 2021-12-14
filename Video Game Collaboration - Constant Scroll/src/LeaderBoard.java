@@ -144,7 +144,7 @@ public class LeaderBoard {
 
 	public ArrayList<String> getTop10() throws IOException {
 		for(int i =0;i<top10.size();i++) {
-			finalLeaderBoard.add((i+1)+". " + fNBoard.get(i) + " Score: "+ top10.get(i));
+			finalLeaderBoard.add((i+1)+". " + fNBoard.get(i) + " | "+ top10.get(i));
 		}
 
 		return finalLeaderBoard;
