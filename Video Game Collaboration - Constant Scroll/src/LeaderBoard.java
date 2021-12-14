@@ -19,25 +19,19 @@ public class LeaderBoard {
 	public static String updateBoardNames = " ";
 	public static String updateBoardScores = " ";
 
-	public static int n=10;
+	public static int n;
+	public static int max;
+	public static int maxIndex;
 
 	public LeaderBoard() throws IOException {
-		try{
-			leaderBoardScores = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardScores.txt")));
-			leaderBoardNames = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardNames.txt")));
-		}catch(IOException e) {
-			e.printStackTrace();
-		}
-	}
-	
-	public static ArrayList<String> getTop10() throws IOException {
-		int max = 0;
-		int maxIndex=0;
-		try{
-			leaderBoardScores = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardScores.txt")));
-			leaderBoardNames = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardNames.txt")));
-		}catch(IOException e) {e.printStackTrace();}
-		
+		max = 0;
+		maxIndex=0;
+		n=10;
+
+		leaderBoardScores = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardScores.txt")));
+		leaderBoardNames = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardNames.txt")));
+
+
 		fSBoard = new ArrayList<Integer>();
 		top10 = new ArrayList<Integer>();
 		nBoard = new ArrayList<String>();
@@ -45,12 +39,12 @@ public class LeaderBoard {
 		finalLeaderBoard = new ArrayList<String>();
 
 
-		nLeaderBoard = leaderBoardNames.split(" ");
+		nLeaderBoard = leaderBoardNames.split("@@");
 		for(String s: nLeaderBoard) {
 			nBoard.add(s);
 		}
 
-		sLeaderBoard = leaderBoardScores.split(" ");
+		sLeaderBoard = leaderBoardScores.split("@@");
 		for(String s: sLeaderBoard) {
 			fSBoard.add(Integer.parseInt(s));
 		}
@@ -77,20 +71,62 @@ public class LeaderBoard {
 			nBoard.remove(maxIndex);
 		}
 
+	}
+
+	public void updateLeaderBoard() throws IOException {
+		leaderBoardScores = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardScores.txt")));
+		leaderBoardNames = new String(Files.readAllBytes(Paths.get("textFiles/LeaderBoardNames.txt")));
 
 
+		fSBoard = new ArrayList<Integer>();
+		top10 = new ArrayList<Integer>();
+		nBoard = new ArrayList<String>();
+		fNBoard = new ArrayList<String>();
+		finalLeaderBoard = new ArrayList<String>();
+
+
+		nLeaderBoard = leaderBoardNames.split("@@");
+		for(String s: nLeaderBoard) {
+			nBoard.add(s);
+		}
+
+		sLeaderBoard = leaderBoardScores.split("@@");
+		for(String s: sLeaderBoard) {
+			fSBoard.add(Integer.parseInt(s));
+		}
+
+		if(fSBoard.size() <10)
+			n=fSBoard.size();
+
+		for(int x = 0; x<n ;x++) {
+			max = 0;
+			maxIndex=0;
+
+			for(int i = 0; i < fSBoard.size(); i++) {
+
+				if(fSBoard.get(i)>max) {
+					max = fSBoard.get(i);
+					maxIndex=i;
+				}
+			}
+
+			top10.add(fSBoard.get(maxIndex));
+			fSBoard.remove(maxIndex);
+
+			fNBoard.add(nBoard.get(maxIndex));
+			nBoard.remove(maxIndex);
+		}
 		updateBoardScores = "";
 		FileWriter sWrite = new FileWriter("textFiles/LeaderBoardScores.txt");
 		PrintWriter sDelete = new PrintWriter(sWrite, false);
 		sDelete.flush();
 		sWrite.write("");
 		for(int s: top10) {
-			updateBoardScores += (s + " ");
+			updateBoardScores += (s + "@@");
 		}
 		sWrite.write(updateBoardScores);
 		sDelete.close();
 		sWrite.close();
-
 
 		updateBoardNames = "";
 		FileWriter nWrite = new FileWriter("textFiles/LeaderBoardNames.txt");
@@ -98,38 +134,44 @@ public class LeaderBoard {
 		nWrite.write("");
 		nDelete.flush();
 		for(String s: fNBoard) {
-			updateBoardNames += (s+ " ");
+			updateBoardNames += (s+ "@@");
 		}
 		nWrite.write(updateBoardNames);
 		nDelete.close();
 
 		nWrite.close();
-		
-		
+	}
+
+	public ArrayList<String> getTop10() throws IOException {
 		for(int i =0;i<top10.size();i++) {
 			finalLeaderBoard.add((i+1)+". " + fNBoard.get(i) + " Score: "+ top10.get(i));
 		}
-		
-		
+
 		return finalLeaderBoard;
 
 	}
-	
-	
-	public static void addScore(String name, String score) throws IOException {
-		try {
-			FileWriter sWrite = new FileWriter("textFiles/LeaderBoardScores.txt");
-			sWrite.write(leaderBoardScores+ score+ " ");
-
-			FileWriter nWrite = new FileWriter("textFiles/LeaderBoardNames.txt");
-			nWrite.write(leaderBoardNames+name + " ");
-
-			sWrite.close();
-			nWrite.close();
-		}catch(Exception e) {System.out.println(e);}
 
 
-		
+
+	public void addScore(String name, int score) throws IOException {
+
+		FileWriter sWrite = new FileWriter("textFiles/LeaderBoardScores.txt");
+		sWrite.write(leaderBoardScores+ score+ "@@");
+
+		FileWriter nWrite = new FileWriter("textFiles/LeaderBoardNames.txt");
+		nWrite.write(leaderBoardNames+name + "@@");
+
+		sWrite.close();
+		nWrite.close();
+
+	}
+
+	public boolean checkScore(int score) {
+		for(int s : top10) {
+			if(s < score)
+				return true;
+		}
+		return false;
 	}
 
 }
