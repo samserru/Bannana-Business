@@ -42,6 +42,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int levelUp;
 	private int commandNum;
 	private boolean indestructable;
+	private int counterIndestructable;
 	private int lives;
 	public LeaderBoard leaderBoard;
 
