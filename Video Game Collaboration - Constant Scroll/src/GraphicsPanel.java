@@ -59,6 +59,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
 		indestructable = false;
+		counterIndestructable=0;
 		levelUp=600;
 		lives=3;
 		new Item(500, 200, "images/objects/box.png", 4);  
