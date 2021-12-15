@@ -4,17 +4,17 @@ import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class LeaderBoard {
 
-	public static String leaderBoardScores;
-	public static String[] sLeaderBoard;
+	public static String leaderBoardScores,leaderBoardNames;
 
-	public static String leaderBoardNames;
 	public static String[] nLeaderBoard;
 
 	public static ArrayList<Integer> fSBoard,top10;
 	public static ArrayList<String> nBoard,fNBoard,finalLeaderBoard;
+	public static HashMap<String, String> leaderBoard;
 
 	public static String updateBoardNames = " ";
 	public static String updateBoardScores = " ";
@@ -39,13 +39,11 @@ public class LeaderBoard {
 		finalLeaderBoard = new ArrayList<String>();
 
 
-		nLeaderBoard = leaderBoardNames.split("@@");
-		for(String s: nLeaderBoard) {
+		for(String s: leaderBoardNames.split("@@")) {
 			nBoard.add(s);
 		}
 
-		sLeaderBoard = leaderBoardScores.split("@@");
-		for(String s: sLeaderBoard) {
+		for(String s: leaderBoardScores.split("@@")) {
 			fSBoard.add(Integer.parseInt(s));
 		}
 
@@ -83,15 +81,14 @@ public class LeaderBoard {
 		nBoard = new ArrayList<String>();
 		fNBoard = new ArrayList<String>();
 		finalLeaderBoard = new ArrayList<String>();
-
-
-		nLeaderBoard = leaderBoardNames.split("@@");
-		for(String s: nLeaderBoard) {
+		
+		
+		for(String s: leaderBoardNames.split("@@")) {
 			nBoard.add(s);
 		}
 
-		sLeaderBoard = leaderBoardScores.split("@@");
-		for(String s: sLeaderBoard) {
+		
+		for(String s: leaderBoardScores.split("@@")) {
 			fSBoard.add(Integer.parseInt(s));
 		}
 

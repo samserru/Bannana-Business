@@ -41,7 +41,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int score;
 	private int levelUp;
 	private int commandNum;
-	private boolean dead;
+	private boolean indestructable;
+	private int lives;
 	public LeaderBoard leaderBoard;
 
 	// This declares an Item object. You can make a Item display
@@ -56,8 +57,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		score = 1;
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
-		dead = false;
+		indestructable = false;
 		levelUp=600;
+		lives=3;
 		new Item(500, 200, "images/objects/box.png", 4);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
@@ -152,7 +154,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		if(gameState == 2) {
 			g2.setColor(new Color(70,120,90));
 			g2.fillRect(-20, 0, 2300, 500);
-			
+
 			g2.setColor(Color.black);
 			g2.setFont(new Font("Arial", Font.BOLD, 40));
 			g2.drawString("LEADERBOARD", 550, 50);
@@ -162,10 +164,10 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				int x = 400;
 				int y = 125;
 				int count=0;
-				
+
 				leaderBoard.updateLeaderBoard();
 				ArrayList<String> leaderBoard1 = leaderBoard.getTop10();
-				
+
 				for(int i = 0; i != 2; i++) {
 					for(int a = 0; a!=5;a++) {
 						g2.drawString(leaderBoard1.get(count), x, y);
@@ -177,10 +179,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				}
 
 			}catch (IOException e) {e.printStackTrace();}
-			
-			
 		}
 
+		//DEATH SCREEN
+		if(gameState==3) {
+			
+		}
 	}
 
 	// method:clock
@@ -196,7 +200,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can move any of your objects by calling their move methods.
 			sprite.move(this);
 
-			if(dead!=true) {
+			
 				background1.move();
 				background2.move();
 
@@ -234,10 +238,13 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 					if(sprite.collision(s)) {
 						System.out.println("stop");
 						//sprite.die();
-						//dead = true;
+						
 					}
 				}
+				//ALWAYS RUNNING
 				sprite.x_direction = 2;
+				
+				//GRAVITY
 				if(sprite.gravityActive){
 					if(sprite.y_coordinate<=0) {
 						sprite.y_coordinate=1;
@@ -259,7 +266,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 					sprite.y_coordinate+=2;
 			}
 
-		}
+		
 		this.repaint();
 	}
 
@@ -304,7 +311,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				sprite.gravityMultiplier = 0.04;
 			}
 		}
-		
+
 		if(gameState==2) {
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				gameState = 0;
@@ -348,7 +355,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// parameters: KeyEvent e
 	@Override
 	public void keyReleased(KeyEvent e) {
-
+		
 		if(e.getKeyCode() ==  KeyEvent.VK_SPACE)
 			sprite.gravityMultiplier = 0.1;
 
