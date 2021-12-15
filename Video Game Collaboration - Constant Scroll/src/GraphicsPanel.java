@@ -81,12 +81,6 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		// method is called by changing the first parameter.
 
 
-
-
-
-
-		//Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag  24 9 9 9 9 8 8 7 7 7 Owen Blake Owen Owen Luke Abella Owen Blake Luke Sam Abella  Owen Blake Luke Sam Abella Owen Blake Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag 24 9 9 9 9 8 8 7 7 7 6 6 6 6 6 6 6 6 5 5 Abella Blake Luke Sam Abella Blake Luke Sam Blake Sam Abella  Owen Blake Luke Sam Abella Owen Blake Luke Sam Abella Bag Tag Rag
-
 		timer.start();
 		this.setFocusable(true);     // for keylistener
 		this.addKeyListener(this);
@@ -183,8 +177,31 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 		//DEATH SCREEN
 		if(gameState==3) {
-			
+			g2.setColor(Color.RED);
+			g2.fillRect(-20, 0, 2300, 500);
+			g2.setFont(new Font("Arial", Font.BOLD, 60));
+			g2.setColor(Color.black);
+
+			g2.drawString("Banana Buisness", 450, 100);
+
+			g2.setFont(new Font("Arial", Font.BOLD, 30));
+			g2.drawString("START", 400, 200);
+			if(commandNum==0) {
+				g2.drawString(">", 380, 200);
+				g2.drawString("<", 505, 200);
+			}
+			g2.drawString("LEADERBOARD", 400, 250);
+			if(commandNum==1) {
+				g2.drawString(">", 380, 250);
+				g2.drawString("<", 640, 250);
+			}
+			g2.drawString("QUIT", 400, 300);
+			if(commandNum==2) {
+				g2.drawString(">", 380, 300);
+				g2.drawString("<", 475, 300);
+			}
 		}
+
 	}
 
 	// method:clock
@@ -200,76 +217,102 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can move any of your objects by calling their move methods.
 			sprite.move(this);
 
-			
-				background1.move();
-				background2.move();
 
-				counter++;
+			background1.move();
+			background2.move();
 
-				//create trash cans
-				if (counter%levelUp==0) {
-					cans.add(new Item(background1.getWidth(), (int)(Math.random()*120) + 120, "images/objects/Barrel2.png", 4));
-				}
-				if(counter%2000==0) {
-					levelUp-=80;
-				}
-				//create fire hydrants
-				if (counter%1750==0) {
-					fireHydrants.add(new Item(background1.getWidth(), 220, "images/objects/Barrel1.png", 4));
-				}
+			counter++;
 
-				for (int i = 0; i <cans.size();i++) {
-
-					cans.get(i).move(this);
-					if(cans.get(i).x_coordinate<=-60) {
-						cans.remove(i);
-					}
-				}
-				for (int i = 0; i <fireHydrants.size();i++) {
-
-					fireHydrants.get(i).move(this);
-					if(fireHydrants.get(i).x_coordinate<=-60) {
-						fireHydrants.remove(i);
-					}
-				}
-				// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
-				// item, the item will get smaller.
-				for(Item s: cans) {
-					if(sprite.collision(s)) {
-						System.out.println("stop");
-						//sprite.die();
-						
-					}
-				}
-				//ALWAYS RUNNING
-				sprite.x_direction = 2;
-				
-				//GRAVITY
-				if(sprite.gravityActive){
-					if(sprite.y_coordinate<=0) {
-						sprite.y_coordinate=1;
-						sprite.gravity=0;
-					}
-					sprite.y_coordinate-=sprite.gravity;
-					sprite.gravity-=sprite.gravityMultiplier;
-
-					if(sprite.y_coordinate>background1.getHeight()-200) {
-						sprite.y_coordinate=background1.getHeight()-200;
-						sprite.gravity=3;
-						sprite.gravityActive = false;
-					}
-
-				}
-				else if(sprite.upPressed&&sprite.y_coordinate>0)
-					sprite.y_coordinate-=2;
-				else if(sprite.downPressed&&sprite.y_coordinate<200)
-					sprite.y_coordinate+=2;
+			//create trash cans
+			if (counter%levelUp==0) {
+				cans.add(new Item(background1.getWidth(), (int)(Math.random()*120) + 120, "images/objects/Barrel2.png", 4));
+			}
+			if(counter%2000==0) {
+				levelUp-=80;
+			}
+			//create fire hydrants
+			if (counter%1750==0) {
+				fireHydrants.add(new Item(background1.getWidth(), 220, "images/objects/Barrel1.png", 4));
 			}
 
-		
+			for (int i = 0; i <cans.size();i++) {
+
+				cans.get(i).move(this);
+				if(cans.get(i).x_coordinate<=-60) {
+					cans.remove(i);
+				}
+			}
+			for (int i = 0; i <fireHydrants.size();i++) {
+
+				fireHydrants.get(i).move(this);
+				if(fireHydrants.get(i).x_coordinate<=-60) {
+					fireHydrants.remove(i);
+				}
+			}
+			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
+			// item, the item will get smaller.
+			for(Item s: cans) {
+				if(sprite.collision(s)&&indestructable == false) {
+						lives--;
+
+					//sprite.die();	
+				}
+				if(lives<=0) {
+					gameState=3;
+					reset();
+					}
+			}
+			//ALWAYS RUNNING
+			sprite.x_direction = 2;
+
+			//GRAVITY
+			if(sprite.gravityActive){
+				if(sprite.y_coordinate<=0) {
+					sprite.y_coordinate=1;
+					sprite.gravity=0;
+				}
+				sprite.y_coordinate-=sprite.gravity;
+				sprite.gravity-=sprite.gravityMultiplier;
+
+				if(sprite.y_coordinate>background1.getHeight()-200) {
+					sprite.y_coordinate=background1.getHeight()-200;
+					sprite.gravity=3;
+					sprite.gravityActive = false;
+				}
+
+			}
+			else if(sprite.upPressed&&sprite.y_coordinate>0)
+				sprite.y_coordinate-=2;
+			else if(sprite.downPressed&&sprite.y_coordinate<200)
+				sprite.y_coordinate+=2;
+		}
+
+
 		this.repaint();
 	}
+//resets the game 
+	public void reset() {
+		commandNum=0;
+		score = 1;
+		background1 = new Background(); // You can set the background variable equal to an instance of any of  
+		background2 = new Background(-background1.getImage().getIconWidth());
+		indestructable = false;
+		levelUp=600;
+		lives=3;
+		new Item(500, 200, "images/objects/box.png", 4);  
+		// The Item constructor has 4 parameters - the x coordinate, y coordinate
+		// the path for the image, and the scale. The scale is used to make the
+		// image smaller, so the bigger the scale, the smaller the image will be.
+		counter = 0;
+		cans = new ArrayList<Item>();
+		fireHydrants = new ArrayList<Item>();
+		sprite = new Sprite(background1.getWidth()/2-190, background1.getHeight()-200);
+		// The Sprite constuctor has two parameter - - the x coordinate and y coordinate
 
+		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
+				background2.getImage().getIconHeight()));  
+	}
+	
 	// method: keyPressed()
 	// description: This method is called when a key is pressed. You can determine which key is pressed using the
 	// KeyEvent object.  For example if(e.getKeyCode() == KeyEvent.VK_LEFT) would test to see if
@@ -317,8 +360,31 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				gameState = 0;
 			}
 		}
+		if(gameState==3) {
+			if(e.getKeyCode() == KeyEvent.VK_UP) {
+				commandNum--;
+				if(commandNum==-1) 
+					commandNum=2;
+			}
+			if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				commandNum++;
+				if(commandNum==3) 
+					commandNum=0;
 
+			}
 
+			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+				if(commandNum==0) {
+					gameState=1;
+				}
+				else if(commandNum==1) {
+					gameState=2;
+				}
+				else if(commandNum==2) {
+					System.exit(0);
+				}
+			}
+		}
 	}
 
 	// This function will play the sound "fileName".
@@ -355,7 +421,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// parameters: KeyEvent e
 	@Override
 	public void keyReleased(KeyEvent e) {
-		
+
 		if(e.getKeyCode() ==  KeyEvent.VK_SPACE)
 			sprite.gravityMultiplier = 0.1;
 

@@ -78,7 +78,7 @@ public class Sprite {
 					imageResource.getImage().getIconHeight()-70);
 		else
 			return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset()+15, y_coordinate+15,
-					imageResource.getImage().getIconWidth()-20 - imageResource.getImageOffset()/2,
+					imageResource.getImage().getIconWidth()-30 - imageResource.getImageOffset()/2,
 					imageResource.getImage().getIconHeight()-20);
 	}
 
