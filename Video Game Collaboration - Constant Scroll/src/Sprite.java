@@ -25,17 +25,18 @@ public class Sprite {
 
 	protected int y_direction; // 0 : not moving
 	// - 1 : up
-		// 1 : down
+	// 1 : down
 	protected float gravity;
 	public boolean gravityActive;
 	protected double gravityMultiplier;
 
+	
 	protected int jumpCounter; // jumping animation takes several frames. This counter is used to keep track
 	// of this process. If the Sprite isn't jumping this should be set to -1.
 
 	protected boolean isDead; // as the name implies, this boolean is set to true of the character dies :(
 	protected ImageResource imageResource; // This object holds all of the images that will be used to draw the Sprite.
-
+	protected boolean isSliding;
 
 	// method: Sprite's packed constructor
 	// description: Initialize a new Sprite object.
@@ -72,14 +73,16 @@ public class Sprite {
 	//              and Item. You probably won't call this method directly.
 	// return: A Rectangle - This rectangle would be like drawing a rectangle around the Character's image.
 	public Rectangle getBounds(){
-		if(x_direction < 0)
-			return new Rectangle(x_coordinate + imageResource.getImageOffset(), y_coordinate-70,
-					imageResource.getImage().getIconWidth()-70 - imageResource.getImageOffset()/2,
-					imageResource.getImage().getIconHeight()-70);
-		else
-			return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset()+15, y_coordinate+15,
+			if(!isSliding)
+				return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset()+15, y_coordinate+15,
 					imageResource.getImage().getIconWidth()-30 - imageResource.getImageOffset()/2,
 					imageResource.getImage().getIconHeight()-20);
+			else
+				return new Rectangle(x_coordinate + 2 * imageResource.getImageOffset()-5, y_coordinate+70,
+						imageResource.getImage().getIconWidth()-10 - imageResource.getImageOffset()/2,
+						imageResource.getImage().getIconHeight()-50);
+			
+		
 	}
 
 	// method: getX
@@ -115,21 +118,25 @@ public class Sprite {
 
 		if(jumpCounter >= 0 && jumpCounter < 45) {
 			jumpCounter++;
-			y_coordinate--;
+			
 		}
 		else if(jumpCounter >= 45 && jumpCounter < 90){
 			jumpCounter++;
-			y_coordinate++;
+			
 		}
-		else {
+		else if(jumpCounter >= 90){
 			jumpCounter = -1;
 		}
+		else if (isSliding) {
+			
+		}
+		
 		if(x_coordinate > c.getWidth()) {
 
 		}
 
 
-		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead);
+		imageResource.updateImage(x_direction + y_direction, jumpCounter >= 0, isDead, isSliding);
 	}
 
 
@@ -167,7 +174,7 @@ public class Sprite {
 		isDead = false;
 	}
 
-	 
+
 	// method: draw
 	// description: This method is used to draw the image onto the GraphicsPanel.  You shouldn't need to
 	// modify this method.
@@ -176,11 +183,9 @@ public class Sprite {
 	public void draw(Graphics g, Component c) {
 		Graphics2D g2 = (Graphics2D)g;
 
-		if(x_direction < 0)
-			g2.drawImage(imageResource.getImage().getImage(), x_coordinate + imageResource.getImage().getIconWidth() + imageResource.getImageOffset(),
-					y_coordinate, -imageResource.getImage().getIconWidth(), imageResource.getImage().getIconHeight(), null);
-		else
-			g2.drawImage(imageResource.getImage().getImage(), x_coordinate + imageResource.getImage().getIconWidth(),
-					y_coordinate, imageResource.getImage().getIconWidth(), imageResource.getImage().getIconHeight(), null);
+
+		g2.drawImage(imageResource.getImage().getImage(), x_coordinate + imageResource.getImage().getIconWidth(),
+				y_coordinate, imageResource.getImage().getIconWidth(), imageResource.getImage().getIconHeight(), null);
+
 	}
 }

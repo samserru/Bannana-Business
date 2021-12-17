@@ -7,10 +7,12 @@
 // Since you will modify this class you should add comments that describe when and how you modified the class.  
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.HeadlessException;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 import java.io.File;
@@ -21,6 +23,8 @@ import java.util.ArrayList;
 import javax.sound.sampled.AudioInputStream;
 import javax.sound.sampled.AudioSystem;
 import javax.sound.sampled.Clip;
+import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import java.awt.Rectangle;
@@ -39,12 +43,15 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int gameState;
 	private int counter;
 	private int score;
+	private boolean isHighScore;
 	private int levelUp;
 	private int commandNum;
 	private boolean indestructable;
 	private int counterIndestructable;
 	private int lives;
+	private String name;
 	public LeaderBoard leaderBoard;
+	
 
 	// This declares an Item object. You can make a Item display
 	// pretty much any image that you would like by passing it
@@ -52,6 +59,10 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 	public GraphicsPanel() throws IOException{
+		
+		
+		isHighScore=false;
+		name="";
 		leaderBoard = new LeaderBoard();
 		gameState = 0;
 		commandNum=0;
@@ -59,9 +70,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
 		indestructable = false;
-		counterIndestructable=0;
+		counterIndestructable=500;
 		levelUp=600;
-		lives=3;
+		lives=4;
 		new Item(500, 200, "images/objects/box.png", 4);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
@@ -104,7 +115,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setFont(new Font("Arial", Font.BOLD, 60));
 			g2.setColor(Color.black);
 
-			g2.drawString("Banana Buisness", 450, 100);
+			g2.drawString("Banana Business", 450, 100);
 
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
 			g2.drawString("START", 400, 200);
@@ -141,9 +152,25 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
 			g2.draw(r);
+			
 			g2.setColor(Color.pink);
 			g2.setFont(new Font("Segoe Script", Font.BOLD + Font.ITALIC, 30));
 			g2.drawString(String.valueOf((int)score), 1250, 30);
+			
+			g2.setColor(Color.red);
+			g2.setFont(new Font("Segoe Script", Font.BOLD, 30));
+			
+			g2.drawString(" Lifes: " +String.valueOf((int)lives), 20, 30);
+			
+			int x = 20;
+			int y = 30;
+			int i = 0;
+			//for(int a = 0; a < 3 ; a++)
+				//g2.drawImage(emptyHeart.getImage(),x,y,null);
+			//while(i<lives) {
+				
+			//}
+			
 		}
 
 		//LEADERBOARD
@@ -184,9 +211,17 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setFont(new Font("Arial", Font.BOLD, 60));
 			g2.setColor(Color.black);
 
-			g2.drawString("Banana Buisness", 450, 100);
-
+			g2.drawString("You Died!", 600, 100);
+			
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
+			
+			if(isHighScore) {
+				g2.setColor(Color.pink);
+				g2.drawString("New High Score!", 630, 30);
+				g2.setColor(Color.black);
+				
+			}
+			
 			g2.drawString("START", 400, 200);
 			if(commandNum==0) {
 				g2.drawString(">", 380, 200);
@@ -253,19 +288,63 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 			// item, the item will get smaller.
-			for(Item s: cans) {
-				if(sprite.collision(s)&&indestructable == false) {
-						lives--;
-
+			counterIndestructable++;
+			
+			for(Item s: fireHydrants) {
+				if(sprite.collision(s)&&!indestructable&&counterIndestructable>60) {
+					lives--;
+					counterIndestructable=0;
 					//sprite.die();	
 				}
-				if(lives<=0) {
+				if(lives==0) {
+					
 					gameState=3;
-					reset();
+
+					isHighScore = leaderBoard.checkScore(score);
+					
+					if(isHighScore) {
+						
+						try {
+							name = JOptionPane.showInputDialog(null, "New High Score!\nEnter Your User Name:");
+							if(name!=null)
+								leaderBoard.addScore(name,score);
+							
+						} catch (HeadlessException | IOException e) {e.printStackTrace();}
 					}
+					
+					reset();
+				}
+			}
+			
+			
+			for(Item s: cans) {
+				if(sprite.collision(s)&&!indestructable&&counterIndestructable>60) {
+					lives--;
+					counterIndestructable=0;
+					//sprite.die();	
+				}
+				if(lives==0) {
+					
+					gameState=3;
+
+					isHighScore = leaderBoard.checkScore(score);
+					
+					if(isHighScore) {
+						
+						try {
+							name = JOptionPane.showInputDialog(null, "New High Score!\nEnter Your User Name:");
+							if(name!=null)
+								leaderBoard.addScore(name,score);
+							
+						} catch (HeadlessException | IOException e) {e.printStackTrace();}
+					}
+					
+					reset();
+				}
 			}
 			//ALWAYS RUNNING
-			sprite.x_direction = 2;
+			if(!sprite.gravityActive)
+				sprite.x_direction = 2;
 
 			//GRAVITY
 			if(sprite.gravityActive){
@@ -283,16 +362,17 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				}
 
 			}
-			else if(sprite.upPressed&&sprite.y_coordinate>0)
-				sprite.y_coordinate-=2;
-			else if(sprite.downPressed&&sprite.y_coordinate<200)
-				sprite.y_coordinate+=2;
+
+
 		}
 
 
 		this.repaint();
 	}
-//resets the game 
+	
+	//drawas hearts
+	
+	//resets the game 
 	public void reset() {
 		commandNum=0;
 		score = 1;
@@ -314,7 +394,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		setPreferredSize(new Dimension(background1.getImage().getIconWidth(),
 				background2.getImage().getIconHeight()));  
 	}
-	
+
 	// method: keyPressed()
 	// description: This method is called when a key is pressed. You can determine which key is pressed using the
 	// KeyEvent object.  For example if(e.getKeyCode() == KeyEvent.VK_LEFT) would test to see if
@@ -338,6 +418,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 				if(commandNum==0) {
 					gameState=1;
+					isHighScore = false;
 				}
 				else if(commandNum==1) {
 					gameState=2;
@@ -350,10 +431,14 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 
 		if(gameState==1) {
-			if(e.getKeyCode() == KeyEvent.VK_SPACE) {
-				gameState =1;
+			if(e.getKeyCode() == KeyEvent.VK_UP) {
+				sprite.jump();
 				sprite.gravityActive = true;
 				sprite.gravityMultiplier = 0.04;
+			}
+			if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+				if(!sprite.gravityActive)
+					sprite.isSliding=true;
 			}
 		}
 
@@ -362,6 +447,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				gameState = 0;
 			}
 		}
+		
 		if(gameState==3) {
 			if(e.getKeyCode() == KeyEvent.VK_UP) {
 				commandNum--;
@@ -387,6 +473,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				}
 			}
 		}
+		
 	}
 
 	// This function will play the sound "fileName".
@@ -424,8 +511,11 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	@Override
 	public void keyReleased(KeyEvent e) {
 
-		if(e.getKeyCode() ==  KeyEvent.VK_SPACE)
+		if(e.getKeyCode() ==  KeyEvent.VK_UP)
 			sprite.gravityMultiplier = 0.1;
+		if(e.getKeyCode() == KeyEvent.VK_DOWN) {
+			sprite.isSliding=false;
+		}
 
 	}
 

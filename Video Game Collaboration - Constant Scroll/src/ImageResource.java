@@ -1,6 +1,8 @@
 import java.awt.Image;
+import java.io.IOException;
 import java.net.URL;
 
+import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 
 public class ImageResource {
@@ -11,6 +13,7 @@ public class ImageResource {
 	private int imageMax;
 	private int imageOffset;
 	public int counter;
+	private int slideCount;
 
 	// These two variables are used so that the image doesn't refresh every time the the panel is redrawn.
 	// Without these variables the images would change much too quickly.
@@ -21,16 +24,26 @@ public class ImageResource {
 
 	private ImageIcon[] runningImages;
 	private ImageIcon[] jumpingImages;
+	private ImageIcon[] slidingImages;
+	public static ImageIcon[] heartImages;
+
 
 	public ImageResource(String imagePath, int imageMax, int imageOffset) {
 		runningImages = new ImageIcon[imageMax];
 		jumpingImages = new ImageIcon[imageMax];
+		slidingImages = new ImageIcon[imageMax];
+		heartImages = new ImageIcon[imageMax];
+		
+		
 		imageCount = 0;
 		jumpCount = 0;
 		counter = 0;
 
 		loadImages((imagePath + "run ("), runningImages);
 		loadImages((imagePath + "jump ("), jumpingImages);
+		loadImages((imagePath + "slide ("), slidingImages);
+		//loadImages((imagePath + "heart ("), heartImages);
+		
 		image = runningImages[imageCount];
 		this.imageMax = imageMax;
 		this.imageOffset = imageOffset;
@@ -53,7 +66,7 @@ public class ImageResource {
 		}
 	}
 
-	public void updateImage(int x_direction, boolean jumping, boolean isDead) {
+	public void updateImage(int x_direction, boolean jumping, boolean isDead, boolean sliding) {
 		counter++;
 		if(counter>3) {
 			imageRefreshCounter++;
@@ -73,10 +86,11 @@ public class ImageResource {
 				jumpCount = (jumpCount < (imageMax * 6)-1) ? jumpCount+1 : 0;
 				image = jumpingImages[jumpCount/6];
 			}
-			// idle 
-			else if(Math.abs(x_direction) == 0 || Math.abs(x_direction) == 1){
-				image = runningImages[0];
+			else if(sliding) {
+				slideCount = (slideCount < (imageMax * 6)-1) ? slideCount+1 : 0;
+				image = slidingImages[slideCount/6];
 			}
+			
 			// running or walking
 			else {
 				image = runningImages[imageCount];
