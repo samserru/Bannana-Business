@@ -1,10 +1,9 @@
-import java.io.FileWriter;
+import java.io.FileWriter; 
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.HashMap;
 
 public class LeaderBoard {
 
@@ -14,7 +13,6 @@ public class LeaderBoard {
 
 	public static ArrayList<Integer> fSBoard,top10;
 	public static ArrayList<String> nBoard,fNBoard,finalLeaderBoard;
-	public static HashMap<String, String> leaderBoard;
 
 	public static String updateBoardNames = " ";
 	public static String updateBoardScores = " ";

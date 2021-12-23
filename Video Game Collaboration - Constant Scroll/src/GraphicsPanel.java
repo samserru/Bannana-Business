@@ -51,7 +51,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private int lives;
 	private String name;
 	public LeaderBoard leaderBoard;
-	
+	public ImageResource imageResource;
+	public ImageIcon[] heartImages;
+
 
 	// This declares an Item object. You can make a Item display
 	// pretty much any image that you would like by passing it
@@ -59,10 +61,11 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 	public GraphicsPanel() throws IOException{
-		
-		
+		imageResource = new ImageResource("images/robot/", 8, 80);
+		heartImages = imageResource.getHealth();
+
 		isHighScore=false;
-		name="";
+		name=null;
 		leaderBoard = new LeaderBoard();
 		gameState = 0;
 		commandNum=0;
@@ -72,7 +75,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		indestructable = false;
 		counterIndestructable=500;
 		levelUp=600;
-		lives=4;
+		lives=3;
 		new Item(500, 200, "images/objects/box.png", 4);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
@@ -108,14 +111,21 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		Graphics2D g2 = (Graphics2D) g;
 
 		//TITLE SCREEN
-		if(gameState ==0) {
+		if(gameState == 0) {
 
 			g2.setColor(new Color(70,120,90));
 			g2.fillRect(-20, 0, 2300, 500);
+			g2.setFont(new Font("Arial", Font.BOLD, 30));
+			if(isHighScore) {
+				g2.setColor(Color.pink);
+				g2.drawString("New High Score!", 600, 30);
+
+			}
 			g2.setFont(new Font("Arial", Font.BOLD, 60));
 			g2.setColor(Color.black);
 
 			g2.drawString("Banana Business", 450, 100);
+			
 
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
 			g2.drawString("START", 400, 200);
@@ -136,7 +146,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 
 		//GAME
-		if(gameState ==1) {
+		else if(gameState ==1) {
+
+
 			background1.draw(this, g);
 			background2.draw(this, g);
 
@@ -152,29 +164,34 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
 			g2.draw(r);
-			
+
 			g2.setColor(Color.pink);
 			g2.setFont(new Font("Segoe Script", Font.BOLD + Font.ITALIC, 30));
 			g2.drawString(String.valueOf((int)score), 1250, 30);
-			
+
 			g2.setColor(Color.red);
 			g2.setFont(new Font("Segoe Script", Font.BOLD, 30));
-			
-			g2.drawString(" Lifes: " +String.valueOf((int)lives), 20, 30);
-			
+
 			int x = 20;
-			int y = 30;
-			int i = 0;
-			//for(int a = 0; a < 3 ; a++)
-				//g2.drawImage(emptyHeart.getImage(),x,y,null);
-			//while(i<lives) {
-				
-			//}
-			
+			int y = 10;
+			for(int a = 0; a < 3 ; a++) {
+				g2.drawImage(heartImages[1].getImage(),x,y,null);
+
+				x+=55;
+			}
+			x=20;
+			for(int b = 0; b<lives;b++) {
+				g2.drawImage(heartImages[0].getImage(),x,y,null);
+				x+=55;
+			}
+
+
+
+
 		}
 
 		//LEADERBOARD
-		if(gameState == 2) {
+		else if(gameState == 2) {
 			g2.setColor(new Color(70,120,90));
 			g2.fillRect(-20, 0, 2300, 500);
 
@@ -188,7 +205,6 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				int y = 125;
 				int count=0;
 
-				leaderBoard.updateLeaderBoard();
 				ArrayList<String> leaderBoard1 = leaderBoard.getTop10();
 
 				for(int i = 0; i != 2; i++) {
@@ -205,39 +221,55 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		}
 
 		//DEATH SCREEN
-		if(gameState==3) {
-			g2.setColor(Color.RED);
-			g2.fillRect(-20, 0, 2300, 500);
-			g2.setFont(new Font("Arial", Font.BOLD, 60));
-			g2.setColor(Color.black);
+		else if(gameState==3) {
+			background1.draw(this, g);
+			background2.draw(this, g);
 
-			g2.drawString("You Died!", 600, 100);
-			
+
+			sprite.draw(g2, this);
+			for (int i =0; i<cans.size();i++) {
+
+				cans.get(i).draw(g2, this);
+			}
+			for (int i =0; i<fireHydrants.size();i++) {
+				fireHydrants.get(i).draw(g2, this);
+			}
+			g2.setColor(Color.RED);
+			Rectangle r = sprite.getBounds();
+			g2.draw(r);
+
+			g2.setColor(Color.pink);
+			g2.setFont(new Font("Segoe Script", Font.BOLD + Font.ITALIC, 30));
+			g2.drawString(String.valueOf((int)score), 1250, 30);
+
+			g2.setColor(Color.red);
+			g2.setFont(new Font("Segoe Script", Font.BOLD, 30));
+
+			int x = 20;
+			int y = 10;
+			for(int a = 0; a < 3 ; a++) {
+				g2.drawImage(heartImages[1].getImage(),x,y,null);
+
+				x+=55;
+			}
+			x=20;
+			for(int b = 0; b<lives;b++) {
+				g2.drawImage(heartImages[0].getImage(),x,y,null);
+				x+=55;
+			}
+
+			g2.setFont(new Font("Arial", Font.BOLD, 60));
+			g2.setColor(Color.red);
+
+			g2.drawString("You Died!", 300, 100);
+
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
-			
-			if(isHighScore) {
-				g2.setColor(Color.pink);
-				g2.drawString("New High Score!", 630, 30);
-				g2.setColor(Color.black);
-				
-			}
-			
-			g2.drawString("START", 400, 200);
-			if(commandNum==0) {
-				g2.drawString(">", 380, 200);
-				g2.drawString("<", 505, 200);
-			}
-			g2.drawString("LEADERBOARD", 400, 250);
-			if(commandNum==1) {
-				g2.drawString(">", 380, 250);
-				g2.drawString("<", 640, 250);
-			}
-			g2.drawString("QUIT", 400, 300);
-			if(commandNum==2) {
-				g2.drawString(">", 380, 300);
-				g2.drawString("<", 475, 300);
-			}
+			g2.drawString("Press Enter to Continue", 300, 200);
+
+
+
 		}
+
 
 	}
 
@@ -246,8 +278,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// of one of your characters in this method so that it moves as time changes.  After you update the
 	// coordinates you should repaint the panel.
 	public void clock(){
+
 		if(gameState==1) {
+
+
 			if(counter%200==0) {
+
 				score++;
 				score*=1.02;
 			}
@@ -268,7 +304,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				levelUp-=80;
 			}
 			//create fire hydrants
-			if (counter%1750==0) {
+			if (counter%1830==0) {
 				fireHydrants.add(new Item(background1.getWidth(), 220, "images/objects/Barrel1.png", 4));
 			}
 
@@ -289,58 +325,46 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 			// item, the item will get smaller.
 			counterIndestructable++;
-			
+
 			for(Item s: fireHydrants) {
 				if(sprite.collision(s)&&!indestructable&&counterIndestructable>60) {
 					lives--;
 					counterIndestructable=0;
 					//sprite.die();	
 				}
-				if(lives==0) {
-					
-					gameState=3;
 
-					isHighScore = leaderBoard.checkScore(score);
-					
-					if(isHighScore) {
-						
-						try {
-							name = JOptionPane.showInputDialog(null, "New High Score!\nEnter Your User Name:");
-							if(name!=null)
-								leaderBoard.addScore(name,score);
-							
-						} catch (HeadlessException | IOException e) {e.printStackTrace();}
-					}
-					
-					reset();
-				}
 			}
-			
-			
+
+
 			for(Item s: cans) {
-				if(sprite.collision(s)&&!indestructable&&counterIndestructable>60) {
+				if(sprite.collision(s)&&!indestructable&&counterIndestructable>75) {
 					lives--;
 					counterIndestructable=0;
 					//sprite.die();	
 				}
-				if(lives==0) {
-					
-					gameState=3;
 
-					isHighScore = leaderBoard.checkScore(score);
-					
-					if(isHighScore) {
-						
-						try {
-							name = JOptionPane.showInputDialog(null, "New High Score!\nEnter Your User Name:");
-							if(name!=null)
-								leaderBoard.addScore(name,score);
-							
-						} catch (HeadlessException | IOException e) {e.printStackTrace();}
-					}
-					
-					reset();
+			}
+
+			if(lives<=0) {
+
+				this.repaint();
+
+				isHighScore = leaderBoard.checkScore(score);
+
+				if(isHighScore) {
+
+					try {
+						name = JOptionPane.showInputDialog(null, "New High Score!\nEnter Your User Name:");
+						if(name!=null)
+							leaderBoard.addScore(name,score);
+						leaderBoard.updateLeaderBoard();
+
+					} catch (HeadlessException | IOException e) {e.printStackTrace();}
 				}
+
+				gameState=3;
+
+
 			}
 			//ALWAYS RUNNING
 			if(!sprite.gravityActive)
@@ -365,13 +389,75 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 		}
+		else if(gameState==3) {
 
+
+			// You can move any of your objects by calling their move methods.
+			sprite.move(this);
+
+
+			background1.move();
+			background2.move();
+
+			counter++;
+
+			//create trash cans
+			if (counter%levelUp==0) {
+				cans.add(new Item(background1.getWidth(), (int)(Math.random()*120) + 120, "images/objects/Barrel2.png", 4));
+			}
+			if(counter%2000==0) {
+				levelUp-=80;
+			}
+			//create fire hydrants
+			if (counter%1830==0) {
+				fireHydrants.add(new Item(background1.getWidth(), 220, "images/objects/Barrel1.png", 4));
+			}
+
+			for (int i = 0; i <cans.size();i++) {
+
+				cans.get(i).move(this);
+				if(cans.get(i).x_coordinate<=-60) {
+					cans.remove(i);
+				}
+			}
+			for (int i = 0; i <fireHydrants.size();i++) {
+
+				fireHydrants.get(i).move(this);
+				if(fireHydrants.get(i).x_coordinate<=-60) {
+					fireHydrants.remove(i);
+				}
+			}
+			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
+			// item, the item will get smaller.
+
+
+			//ALWAYS RUNNING
+			if(!sprite.gravityActive)
+				sprite.x_direction = 2;
+
+			//GRAVITY
+			if(sprite.gravityActive){
+				if(sprite.y_coordinate<=0) {
+					sprite.y_coordinate=1;
+					sprite.gravity=0;
+				}
+				sprite.y_coordinate-=sprite.gravity;
+				sprite.gravity-=sprite.gravityMultiplier;
+
+				if(sprite.y_coordinate>background1.getHeight()-200) {
+					sprite.y_coordinate=background1.getHeight()-200;
+					sprite.gravity=3;
+					sprite.gravityActive = false;
+				}
+
+			}
+		}
 
 		this.repaint();
 	}
-	
+
 	//drawas hearts
-	
+
 	//resets the game 
 	public void reset() {
 		commandNum=0;
@@ -430,7 +516,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 		}
 
-		if(gameState==1) {
+		else if(gameState==1) {
 			if(e.getKeyCode() == KeyEvent.VK_UP) {
 				sprite.jump();
 				sprite.gravityActive = true;
@@ -442,38 +528,20 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 		}
 
-		if(gameState==2) {
+		else if(gameState==2) {
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				gameState = 0;
 			}
 		}
-		
-		if(gameState==3) {
-			if(e.getKeyCode() == KeyEvent.VK_UP) {
-				commandNum--;
-				if(commandNum==-1) 
-					commandNum=2;
-			}
-			if(e.getKeyCode() == KeyEvent.VK_DOWN) {
-				commandNum++;
-				if(commandNum==3) 
-					commandNum=0;
 
-			}
-
+		else if(gameState==3) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-				if(commandNum==0) {
-					gameState=1;
-				}
-				else if(commandNum==1) {
-					gameState=2;
-				}
-				else if(commandNum==2) {
-					System.exit(0);
-				}
+				reset();
+				gameState=0;
 			}
 		}
-		
+
+
 	}
 
 	// This function will play the sound "fileName".
@@ -510,7 +578,6 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// parameters: KeyEvent e
 	@Override
 	public void keyReleased(KeyEvent e) {
-
 		if(e.getKeyCode() ==  KeyEvent.VK_UP)
 			sprite.gravityMultiplier = 0.1;
 		if(e.getKeyCode() == KeyEvent.VK_DOWN) {

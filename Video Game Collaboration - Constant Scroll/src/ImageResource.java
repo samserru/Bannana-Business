@@ -8,12 +8,15 @@ import javax.swing.ImageIcon;
 public class ImageResource {
 
 	private ImageIcon image;			// The ImageIcon will be used to hold the Character's png.
+	private ImageIcon health;	
 	private int imageCount;
 	private int jumpCount;
 	private int imageMax;
 	private int imageOffset;
 	public int counter;
 	private int slideCount;
+	public static int lives;
+	public int healthCount;
 
 	// These two variables are used so that the image doesn't refresh every time the the panel is redrawn.
 	// Without these variables the images would change much too quickly.
@@ -25,31 +28,34 @@ public class ImageResource {
 	private ImageIcon[] runningImages;
 	private ImageIcon[] jumpingImages;
 	private ImageIcon[] slidingImages;
-	public static ImageIcon[] heartImages;
+	public ImageIcon[] heartImages;
 
 
 	public ImageResource(String imagePath, int imageMax, int imageOffset) {
 		runningImages = new ImageIcon[imageMax];
 		jumpingImages = new ImageIcon[imageMax];
 		slidingImages = new ImageIcon[imageMax];
-		heartImages = new ImageIcon[imageMax];
+		heartImages = new ImageIcon[2];
 		
 		
 		imageCount = 0;
+		healthCount = 0;
 		jumpCount = 0;
 		counter = 0;
 
 		loadImages((imagePath + "run ("), runningImages);
 		loadImages((imagePath + "jump ("), jumpingImages);
 		loadImages((imagePath + "slide ("), slidingImages);
-		//loadImages((imagePath + "heart ("), heartImages);
+		loadHealth((imagePath + "heart ("), heartImages);
 		
 		image = runningImages[imageCount];
+		health = heartImages[healthCount];
+		
 		this.imageMax = imageMax;
 		this.imageOffset = imageOffset;
 	}
 
-	private void loadImages(String imagePath, ImageIcon[] images) {
+	public void loadImages(String imagePath, ImageIcon[] images) {
 
 		ClassLoader cldr = this.getClass().getClassLoader();
 		String newImagePath; 
@@ -63,6 +69,23 @@ public class ImageResource {
 			Image scaled = image.getImage().getScaledInstance(image.getIconWidth() / SCALE, 
 					image.getIconHeight() / SCALE, image.getImage().SCALE_SMOOTH);
 			images[i] = new ImageIcon(scaled);
+		}
+	}
+	
+	public void loadHealth(String imagePath, ImageIcon[] images) {
+		
+		ClassLoader cldr = this.getClass().getClassLoader();
+		String newImagePath; 
+
+		for(int i = 0; i < images.length; i++) {
+			newImagePath = imagePath + (i + 1) + ").png";
+
+			URL imageURL = cldr.getResource(newImagePath);				
+			health = new ImageIcon(imageURL);	
+			health.getImage();
+			Image scaled = health.getImage().getScaledInstance(health.getIconWidth() *3, 
+					health.getIconHeight()*3, health.getImage().SCALE_SMOOTH);
+			heartImages[i] = new ImageIcon(scaled);
 		}
 	}
 
@@ -95,12 +118,21 @@ public class ImageResource {
 			else {
 				image = runningImages[imageCount];
 			}
+			
 			counter = 0;
 		}
 	}
 
 	public ImageIcon getImage() {
 		return image;
+	}
+	
+	public ImageIcon getHeart() {
+		return health;
+	}
+	
+	public ImageIcon[] getHealth() {
+		return heartImages;
 	}
 
 	public int getImageOffset() {

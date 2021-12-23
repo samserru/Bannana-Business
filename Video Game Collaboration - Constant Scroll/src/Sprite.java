@@ -10,6 +10,8 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Rectangle;
 
+import javax.swing.ImageIcon;
+
 public class Sprite {
 
 	// movement variables
@@ -26,6 +28,8 @@ public class Sprite {
 	protected int y_direction; // 0 : not moving
 	// - 1 : up
 	// 1 : down
+	public ImageIcon[] heartImages;
+	public static int lives;
 	protected float gravity;
 	public boolean gravityActive;
 	protected double gravityMultiplier;
@@ -43,6 +47,8 @@ public class Sprite {
 	// parameters: x_coordinate - the initial x-coordinate for Sprite.
 	//   y_coordinate - the initial y-coordinate for Sprite.
 	public Sprite(int x_coordinate, int y_cordinate){
+		imageResource = new ImageResource("images/robot/", 8, 80);
+		heartImages = imageResource.getHealth();
 		gravity = 3;
 		gravityMultiplier = 0.1;
 		this.x_coordinate = x_coordinate; // Initial coordinates for the Sprite.
