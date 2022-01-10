@@ -18,9 +18,9 @@ public class Background {
 
 	public Background(int x) {
 		ClassLoader cldr = this.getClass().getClassLoader(); // These five lines of code load the background picture.
-		String imagePath = "images/background/raceTrack.png"; // Change this line if you want to use a different
+		String imagePath = "images/background/CityBOY.jpg"; // Change this line if you want to use a different
 		URL imageURL = cldr.getResource(imagePath); // background image.  The image should be saved in the
-		scale = 1;
+		scale = 9;
 
 		image = new ImageIcon(imageURL);
 

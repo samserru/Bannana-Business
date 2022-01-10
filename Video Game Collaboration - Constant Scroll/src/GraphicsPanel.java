@@ -76,7 +76,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		counterIndestructable=500;
 		levelUp=600;
 		lives=3;
-		new Item(500, 200, "images/objects/box.png", 4);  
+		new Item(500, 400, "images/objects/box.png", 4);  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
 		// image smaller, so the bigger the scale, the smaller the image will be.
@@ -118,30 +118,30 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
 			if(isHighScore) {
 				g2.setColor(Color.pink);
-				g2.drawString("New High Score!", 600, 30);
+				g2.drawString("New High Score!", 400, 30);
 
 			}
 			g2.setFont(new Font("Arial", Font.BOLD, 60));
 			g2.setColor(Color.black);
 
-			g2.drawString("Banana Business", 450, 100);
+			g2.drawString("Banana Business", 250, 100);
 			
 
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
-			g2.drawString("START", 400, 200);
+			g2.drawString("START", 200, 200);
 			if(commandNum==0) {
-				g2.drawString(">", 380, 200);
-				g2.drawString("<", 505, 200);
+				g2.drawString(">", 180, 200);
+				g2.drawString("<", 305, 200);
 			}
-			g2.drawString("LEADERBOARD", 400, 250);
+			g2.drawString("LEADERBOARD", 200, 250);
 			if(commandNum==1) {
-				g2.drawString(">", 380, 250);
-				g2.drawString("<", 640, 250);
+				g2.drawString(">", 180, 250);
+				g2.drawString("<", 440, 250);
 			}
-			g2.drawString("QUIT", 400, 300);
+			g2.drawString("QUIT", 200, 300);
 			if(commandNum==2) {
-				g2.drawString(">", 380, 300);
-				g2.drawString("<", 475, 300);
+				g2.drawString(">", 180, 300);
+				g2.drawString("<", 275, 300);
 			}
 		}
 
@@ -165,9 +165,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			Rectangle r = sprite.getBounds();
 			g2.draw(r);
 
-			g2.setColor(Color.pink);
+			g2.setColor(Color.ORANGE);
 			g2.setFont(new Font("Segoe Script", Font.BOLD + Font.ITALIC, 30));
-			g2.drawString(String.valueOf((int)score), 1250, 30);
+			g2.drawString(String.valueOf((int)score), 750, 30);
 
 			g2.setColor(Color.red);
 			g2.setFont(new Font("Segoe Script", Font.BOLD, 30));
@@ -197,11 +197,11 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 			g2.setColor(Color.black);
 			g2.setFont(new Font("Arial", Font.BOLD, 40));
-			g2.drawString("LEADERBOARD", 550, 50);
+			g2.drawString("LEADERBOARD", 400, 50);
 			g2.setFont(new Font("Arial", Font.BOLD, 20));
 			g2.drawString("Press ESC to go back", 30, 30);
 			try {
-				int x = 400;
+				int x = 200;
 				int y = 125;
 				int count=0;
 
@@ -214,7 +214,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 						count++;
 					}
 					y=125;
-					x+=400;
+					x+=200;
 				}
 
 			}catch (IOException e) {e.printStackTrace();}
@@ -298,14 +298,14 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 			//create trash cans
 			if (counter%levelUp==0) {
-				cans.add(new Item(background1.getWidth(), (int)(Math.random()*120) + 120, "images/objects/Barrel2.png", 4));
+				cans.add(new Item(background1.getWidth(), (int)(Math.random()*90) + 310, "images/objects/Barrel2.png", 4));
 			}
 			if(counter%2000==0) {
 				levelUp-=80;
 			}
 			//create fire hydrants
 			if (counter%1830==0) {
-				fireHydrants.add(new Item(background1.getWidth(), 220, "images/objects/Barrel1.png", 4));
+				fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
 			}
 
 			for (int i = 0; i <cans.size();i++) {

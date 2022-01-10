@@ -194,4 +194,6 @@ public class Sprite {
 				y_coordinate, imageResource.getImage().getIconWidth(), imageResource.getImage().getIconHeight(), null);
 
 	}
+
+	
 }
