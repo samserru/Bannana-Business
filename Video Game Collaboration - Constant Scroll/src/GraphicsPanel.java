@@ -53,6 +53,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public LeaderBoard leaderBoard;
 	public ImageResource imageResource;
 	public ImageIcon[] heartImages;
+	private int item;
 
 
 	// This declares an Item object. You can make a Item display
@@ -61,22 +62,35 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 	public GraphicsPanel() throws IOException{
+		
+		//allows for us to display the hearts for lives
 		imageResource = new ImageResource("images/robot/", 8, 80);
 		heartImages = imageResource.getHealth();
-
+		
+		//helps to place new highscores with textfiles on the leaderboard
 		isHighScore=false;
 		name=null;
 		leaderBoard = new LeaderBoard();
+		
+		//changes what is displayed on the screen
 		gameState = 0;
 		commandNum=0;
+		
+		//initial score that is displayed on the screen when playing
 		score = 1;
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
+		
+		//gives break time to player so one object doesn't automatically kill them
 		indestructable = false;
 		counterIndestructable=500;
+		
+		//allows for the game to get progressively harder
 		levelUp=600;
+		
+		//starting lives amount
 		lives=3;
-		new Item(500, 400, "images/objects/box.png", 4);  
+	 
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
 		// image smaller, so the bigger the scale, the smaller the image will be.
@@ -110,7 +124,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public void paintComponent(Graphics g){
 		Graphics2D g2 = (Graphics2D) g;
 
-		//TITLE SCREEN
+		//TITLE SCREEN- what is displayed in the beginning
 		if(gameState == 0) {
 
 			g2.setColor(new Color(70,120,90));
@@ -145,22 +159,28 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 		}
 
-		//GAME
+		//GAME- where the display of the actual gameplay occurs
 		else if(gameState ==1) {
 
-
+			//draws backgrounds
 			background1.draw(this, g);
 			background2.draw(this, g);
 
-
+			//draws sprite
 			sprite.draw(g2, this);
-			for (int i =0; i<cans.size();i++) {
+			
+			//draws trash cans
+			for (Item b: cans) {
 
-				cans.get(i).draw(g2, this);
+				b.draw(g2, this);
 			}
-			for (int i =0; i<fireHydrants.size();i++) {
-				fireHydrants.get(i).draw(g2, this);
+			
+			//draws fireHydrants
+			for (Item z: fireHydrants) {
+				z.draw(g2, this);
 			}
+			
+			//hitbox for the robot
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
 			g2.draw(r);
@@ -174,12 +194,16 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 			int x = 20;
 			int y = 10;
+			
+			//allows heart images to be drawn
 			for(int a = 0; a < 3 ; a++) {
 				g2.drawImage(heartImages[1].getImage(),x,y,null);
 
 				x+=55;
 			}
 			x=20;
+			
+			//changes herat images during death
 			for(int b = 0; b<lives;b++) {
 				g2.drawImage(heartImages[0].getImage(),x,y,null);
 				x+=55;
@@ -190,7 +214,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 		}
 
-		//LEADERBOARD
+		//LEADERBOARD- gamestate which allows leader board to be displayed
 		else if(gameState == 2) {
 			g2.setColor(new Color(70,120,90));
 			g2.fillRect(-20, 0, 2300, 500);
@@ -204,7 +228,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				int x = 200;
 				int y = 125;
 				int count=0;
-
+				//allows textfile with scores to demonstrate output
 				ArrayList<String> leaderBoard1 = leaderBoard.getTop10();
 
 				for(int i = 0; i != 2; i++) {
@@ -220,19 +244,19 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}catch (IOException e) {e.printStackTrace();}
 		}
 
-		//DEATH SCREEN
+		//DEATH SCREEN--THE WORST-where the screen ends up when lives run out
 		else if(gameState==3) {
 			background1.draw(this, g);
 			background2.draw(this, g);
 
 
 			sprite.draw(g2, this);
-			for (int i =0; i<cans.size();i++) {
+			for (Item w: cans) {
 
-				cans.get(i).draw(g2, this);
+				w.draw(g2, this);
 			}
-			for (int i =0; i<fireHydrants.size();i++) {
-				fireHydrants.get(i).draw(g2, this);
+			for (Item s: fireHydrants) {
+				s.draw(g2, this);
 			}
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
@@ -279,6 +303,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	// coordinates you should repaint the panel.
 	public void clock(){
 
+		//while gameplay is running
 		if(gameState==1) {
 
 
@@ -290,23 +315,28 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can move any of your objects by calling their move methods.
 			sprite.move(this);
 
-
+			//allows backgrounds to move
 			background1.move();
 			background2.move();
-
+			
+			//what is used to keep track of how often things are created
 			counter++;
 
-			//create trash cans
+			//creates trash cans
 			if (counter%levelUp==0) {
-				cans.add(new Item(background1.getWidth(), (int)(Math.random()*90) + 310, "images/objects/Barrel2.png", 4));
+				item = (int) (Math.random()*(10)+0);
+				if(item>=0 && item<=4)
+					cans.add(new Item(background1.getWidth(), (int)(Math.random()*90) + 310, "images/objects/Barrel2.png", 4));
+				if(item>=5 && item<=9)
+					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
+				if(item==10)
+					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
 			}
-			if(counter%2000==0) {
-				levelUp-=80;
+			if(counter%1000==0) {
+				levelUp-=40;
 			}
-			//create fire hydrants
-			if (counter%1830==0) {
-				fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
-			}
+			//creates fire hydrants
+			
 
 			for (int i = 0; i <cans.size();i++) {
 
@@ -325,17 +355,20 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 			// item, the item will get smaller.
 			counterIndestructable++;
-
+			
+			
+			//collisions code which allows lives and score to change
 			for(Item s: fireHydrants) {
 				if(sprite.collision(s)&&!indestructable&&counterIndestructable>60) {
 					lives--;
+					score-=10;
 					counterIndestructable=0;
 					//sprite.die();	
 				}
 
 			}
 
-
+			//collisions code which allows lives to change
 			for(Item s: cans) {
 				if(sprite.collision(s)&&!indestructable&&counterIndestructable>75) {
 					lives--;
@@ -344,11 +377,13 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				}
 
 			}
-
+			//what occurs during the death
 			if(lives<=0) {
 
 				this.repaint();
 
+				
+				//checks to see if a new highscore should be added
 				isHighScore = leaderBoard.checkScore(score);
 
 				if(isHighScore) {
@@ -366,11 +401,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 			}
-			//ALWAYS RUNNING
+			//ALWAYS RUNNING--allows our character to always be running
 			if(!sprite.gravityActive)
 				sprite.x_direction = 2;
 
-			//GRAVITY
+			//GRAVITY- the function enabling our character to fall back to their regular
+			//running space
 			if(sprite.gravityActive){
 				if(sprite.y_coordinate<=0) {
 					sprite.y_coordinate=1;
@@ -456,18 +492,18 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		this.repaint();
 	}
 
-	//drawas hearts
+	
 
-	//resets the game 
+	//resets the game - everything below is a reiteration of previous code, just implemented once again
 	public void reset() {
 		commandNum=0;
 		score = 1;
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
 		indestructable = false;
-		levelUp=600;
+		levelUp=200;
 		lives=3;
-		new Item(500, 200, "images/objects/box.png", 4);  
+		  
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
 		// image smaller, so the bigger the scale, the smaller the image will be.
@@ -515,7 +551,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 
 		}
-
+		//allows a constant gravity multiplier during the gamestate for regular play
 		else if(gameState==1) {
 			if(e.getKeyCode() == KeyEvent.VK_UP) {
 				sprite.jump();
@@ -527,13 +563,13 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 					sprite.isSliding=true;
 			}
 		}
-
+		// sets gamestate of 2 back to the title screen
 		else if(gameState==2) {
 			if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				gameState = 0;
 			}
 		}
-
+		//brings everything back to the title screen
 		else if(gameState==3) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 				reset();

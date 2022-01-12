@@ -28,6 +28,8 @@ public class Sprite {
 	protected int y_direction; // 0 : not moving
 	// - 1 : up
 	// 1 : down
+	
+	//allows for the heart images to eventually be displayed
 	public ImageIcon[] heartImages;
 	public static int lives;
 	protected float gravity;
@@ -63,11 +65,12 @@ public class Sprite {
 
 	}
 
+	//allows for us to create collisions with life adjustments
 	public boolean collision(Sprite otherSprite) {
 		return getBounds().intersects(otherSprite.getBounds());
 
 	}
-
+	//allows for us to create collisions with our obstacles
 	public boolean collision(Item item) {
 		return getBounds().intersects(item.getBounds());
 	}
@@ -118,6 +121,7 @@ public class Sprite {
 			y_coordinate -= gravity;
 			gravity-=0.5;
 		}
+		
 		else if (!isDead && (y_coordinate > 0 && y_direction == -1) ||
 				(y_coordinate + imageResource.getImage().getIconWidth() < c.getHeight() && y_direction == 1 ))
 			y_coordinate += (y_direction);

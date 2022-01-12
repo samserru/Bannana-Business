@@ -51,6 +51,10 @@ public class Background {
 	public int getX() {
 		return x;
 	}
+	// method: move
+	// parameters:none
+	// return type:none
+	// description: Assists in moving are background the opposite way. Counts down x as move function repeats
 
 	public void move() {
 		if(getX()>-image.getIconWidth())
