@@ -42,6 +42,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	private Sprite sprite; // create a Sprite object
 	private int gameState;
 	private int counter;
+	private ArrayList<Item> banana;
 	private int score;
 	private boolean isHighScore;
 	private int levelUp;
@@ -62,35 +63,38 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 
 	public GraphicsPanel() throws IOException{
-		
+
 		//allows for us to display the hearts for lives
 		imageResource = new ImageResource("images/robot/", 8, 80);
 		heartImages = imageResource.getHealth();
-		
+
+		//instatiate bananas
+		banana= new ArrayList<>();
+
 		//helps to place new highscores with textfiles on the leaderboard
 		isHighScore=false;
 		name=null;
 		leaderBoard = new LeaderBoard();
-		
+
 		//changes what is displayed on the screen
 		gameState = 0;
 		commandNum=0;
-		
+
 		//initial score that is displayed on the screen when playing
 		score = 1;
 		background1 = new Background(); // You can set the background variable equal to an instance of any of  
 		background2 = new Background(-background1.getImage().getIconWidth());
-		
+
 		//gives break time to player so one object doesn't automatically kill them
 		indestructable = false;
 		counterIndestructable=500;
-		
+
 		//allows for the game to get progressively harder
 		levelUp=600;
-		
+
 		//starting lives amount
 		lives=3;
-	 
+
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
 		// image smaller, so the bigger the scale, the smaller the image will be.
@@ -139,7 +143,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			g2.setColor(Color.black);
 
 			g2.drawString("Banana Business", 250, 100);
-			
+
 
 			g2.setFont(new Font("Arial", Font.BOLD, 30));
 			g2.drawString("START", 200, 200);
@@ -168,18 +172,21 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 			//draws sprite
 			sprite.draw(g2, this);
-			
+
 			//draws trash cans
 			for (Item b: cans) {
 
 				b.draw(g2, this);
 			}
-			
+
 			//draws fireHydrants
 			for (Item z: fireHydrants) {
 				z.draw(g2, this);
 			}
-			
+			for (Item z: banana) {
+				z.draw(g2, this);
+			}
+
 			//hitbox for the robot
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
@@ -194,7 +201,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 			int x = 20;
 			int y = 10;
-			
+
 			//allows heart images to be drawn
 			for(int a = 0; a < 3 ; a++) {
 				g2.drawImage(heartImages[1].getImage(),x,y,null);
@@ -202,7 +209,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				x+=55;
 			}
 			x=20;
-			
+
 			//changes herat images during death
 			for(int b = 0; b<lives;b++) {
 				g2.drawImage(heartImages[0].getImage(),x,y,null);
@@ -257,7 +264,12 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			}
 			for (Item s: fireHydrants) {
 				s.draw(g2, this);
+				
+				
 			}
+			for (Item s: banana) {
+				s.draw(g2, this);}
+			
 			g2.setColor(Color.RED);
 			Rectangle r = sprite.getBounds();
 			g2.draw(r);
@@ -318,32 +330,39 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			//allows backgrounds to move
 			background1.move();
 			background2.move();
-			
+
 			//what is used to keep track of how often things are created
 			counter++;
 
 			//creates trash cans
 			if (counter%levelUp==0) {
-				item = (int) (Math.random()*(10)+0);
+				item = (int)(Math.random()*(14)+0);
 				if(item>=0 && item<=4)
 					cans.add(new Item(background1.getWidth(), (int)(Math.random()*90) + 310, "images/objects/Barrel2.png", 4));
-				if(item>=5 && item<=9)
+				else if(item>=5 && item<=9)
 					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
-				if(item==10)
-					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
+				else if(item>0)
+					banana.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/PoisenBanana.png", 4));
 			}
 			if(counter%1000==0) {
 				levelUp-=40;
 			}
-			//creates fire hydrants
-			
-
+			//deletes fire hydrants
 			for (int i = 0; i <cans.size();i++) {
 
 				cans.get(i).move(this);
 				if(cans.get(i).x_coordinate<=-60) {
 					cans.remove(i);
 				}
+			}
+
+			for (int i = 0; i <banana.size();i++) {
+
+				banana.get(i).move(this);
+				if(banana.get(i).x_coordinate<=-60) {
+					banana.remove(i);
+				}
+
 			}
 			for (int i = 0; i <fireHydrants.size();i++) {
 
@@ -355,8 +374,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 			// item, the item will get smaller.
 			counterIndestructable++;
-			
-			
+
+
 			//collisions code which allows lives and score to change
 			for(Item s: fireHydrants) {
 				if(sprite.collision(s)&&!indestructable&&counterIndestructable>60) {
@@ -367,7 +386,14 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				}
 
 			}
+			for(Item s: banana) {
+				if(sprite.collision(s)&&!indestructable&&counterIndestructable>1000) {
 
+					score-=20;
+					counterIndestructable=0;
+
+				}
+			}
 			//collisions code which allows lives to change
 			for(Item s: cans) {
 				if(sprite.collision(s)&&!indestructable&&counterIndestructable>75) {
@@ -382,7 +408,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 
 				this.repaint();
 
-				
+
 				//checks to see if a new highscore should be added
 				isHighScore = leaderBoard.checkScore(score);
 
@@ -492,7 +518,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		this.repaint();
 	}
 
-	
+
 
 	//resets the game - everything below is a reiteration of previous code, just implemented once again
 	public void reset() {
@@ -503,7 +529,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		indestructable = false;
 		levelUp=200;
 		lives=3;
-		  
+
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
 		// image smaller, so the bigger the scale, the smaller the image will be.
