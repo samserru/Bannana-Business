@@ -338,9 +338,9 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			if (counter%levelUp==0) {
 				item = (int)(Math.random()*(14)+0);
 				if(item>=0 && item<=4)
-					cans.add(new Item(background1.getWidth(), (int)(Math.random()*90) + 310, "images/objects/Barrel2.png", 4));
+					cans.add(new Item(background1.getWidth(), background1.getHeight()/2-30, "images/objects/Artboard 5.jpg", 4));
 				else if(item>=5 && item<=9)
-					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()-100, "images/objects/Barrel1.png", 4));
+					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()/2-30, "images/objects/firehydrant transperant.png", 4));
 				else if(item>=10)
 					banana.add(new Item(background1.getWidth(), background1.getHeight()/2 -30, "images/objects/Poisen.png", 4));
 			}
