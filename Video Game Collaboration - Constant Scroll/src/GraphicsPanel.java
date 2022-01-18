@@ -56,6 +56,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public ImageIcon[] heartImages;
 	private int item,spawnrate;
 	private Item coverMonkey;
+	private Item dog;
 
 
 	// This declares an Item object. You can make a Item display

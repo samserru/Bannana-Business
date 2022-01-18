@@ -35,6 +35,7 @@ public class Sprite {
 	protected float gravity;
 	public boolean gravityActive;
 	protected double gravityMultiplier;
+	private Item dog;
 
 	
 	protected int jumpCounter; // jumping animation takes several frames. This counter is used to keep track

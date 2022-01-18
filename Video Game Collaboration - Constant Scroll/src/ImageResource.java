@@ -17,6 +17,7 @@ public class ImageResource {
 	private int slideCount;
 	public static int lives;
 	public int healthCount;
+	private Item dog;
 
 	// These two variables are used so that the image doesn't refresh every time the the panel is redrawn.
 	// Without these variables the images would change much too quickly.
