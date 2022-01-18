@@ -54,7 +54,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public LeaderBoard leaderBoard;
 	public ImageResource imageResource;
 	public ImageIcon[] heartImages;
-	private int item;
+	private int item,spawnrate;
+	private Item coverMonkey;
 
 
 	// This declares an Item object. You can make a Item display
@@ -67,6 +68,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		//allows for us to display the hearts for lives
 		imageResource = new ImageResource("images/robot/", 8, 80);
 		heartImages = imageResource.getHealth();
+		coverMonkey = new Item(10, 100 , "images/robot/cover monkey.jpg", 4);
 
 		//instatiate bananas
 		banana= new ArrayList<>();
@@ -88,6 +90,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		//gives break time to player so one object doesn't automatically kill them
 		indestructable = false;
 		counterIndestructable=500;
+		spawnrate=20000;
 
 		//allows for the game to get progressively harder
 		levelUp=600;
@@ -161,6 +164,8 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 				g2.drawString(">", 180, 300);
 				g2.drawString("<", 275, 300);
 			}
+			
+			coverMonkey.draw(g2, this);;
 		}
 
 		//GAME- where the display of the actual gameplay occurs
@@ -332,17 +337,18 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 			background2.move();
 
 			//what is used to keep track of how often things are created
-			counter++;
-
+			counter+=(int)(Math.random()*100);
 			//creates trash cans
-			if (counter%levelUp==0) {
+			if (counter>spawnrate) {
 				item = (int)(Math.random()*(14)+0);
 				if(item>=0 && item<=4)
-					cans.add(new Item(background1.getWidth(), background1.getHeight()/2-30, "images/objects/Artboard 5.jpg", 4));
+					cans.add(new Item(background1.getWidth(), background1.getHeight()/2+ (int)(Math.random()*80)+10, "images/objects/Dodo.png", 4));
 				else if(item>=5 && item<=9)
-					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()/2-30, "images/objects/firehydrant transperant.png", 4));
+					fireHydrants.add(new Item(background1.getWidth(), background1.getHeight()/2+ (int)(Math.random()*80)+10, "images/objects/firehydrant transperant.png", 4));
 				else if(item>=10)
-					banana.add(new Item(background1.getWidth(), background1.getHeight()/2 -30, "images/objects/Poisen.png", 4));
+					banana.add(new Item(background1.getWidth(), background1.getHeight()/2 + (int)(Math.random()*80)+10, "images/objects/Poisen.png", 4));
+				counter=0;
+				spawnrate-=100;
 			}
 			if(counter%1000==0) {
 				levelUp-=40;
@@ -371,6 +377,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 					fireHydrants.remove(i);
 				}
 			}
+			
 			// You can also check to see if two objects intersect like this. In this case if the sprite collides with the
 			// item, the item will get smaller.
 			counterIndestructable++;
@@ -529,6 +536,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		indestructable = false;
 		levelUp=200;
 		lives=3;
+		spawnrate = 20000;
 
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the

@@ -32,7 +32,7 @@ public class ImageResource {
 
 
 	public ImageResource(String imagePath, int imageMax, int imageOffset) {
-		runningImages = new ImageIcon[imageMax];
+		runningImages = new ImageIcon[5];
 		jumpingImages = new ImageIcon[imageMax];
 		slidingImages = new ImageIcon[imageMax];
 		heartImages = new ImageIcon[2];
@@ -43,7 +43,7 @@ public class ImageResource {
 		jumpCount = 0;
 		counter = 0;
 
-		loadImages((imagePath + "run ("), runningImages);
+		loadImages((imagePath + "MonkeyJog ("), runningImages);
 		loadImages((imagePath + "jump ("), jumpingImages);
 		loadImages((imagePath + "slide ("), slidingImages);
 		loadHealth((imagePath + "heart ("), heartImages);
@@ -94,7 +94,7 @@ public class ImageResource {
 		if(counter>3) {
 			imageRefreshCounter++;
 
-			if(imageRefreshCounter >= IMAGE_REFRESH_MAX && imageCount < imageMax - 1) {
+			if(imageRefreshCounter >= IMAGE_REFRESH_MAX && imageCount < imageMax - 2) {
 				imageCount++;
 				imageRefreshCounter = 0;
 			}	

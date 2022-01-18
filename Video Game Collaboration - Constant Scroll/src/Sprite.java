@@ -49,7 +49,7 @@ public class Sprite {
 	// parameters: x_coordinate - the initial x-coordinate for Sprite.
 	//   y_coordinate - the initial y-coordinate for Sprite.
 	public Sprite(int x_coordinate, int y_cordinate){
-		imageResource = new ImageResource("images/robot/", 8, 80);
+		imageResource = new ImageResource("images/robot/", 4, 80);
 		heartImages = imageResource.getHealth();
 		gravity = 3;
 		gravityMultiplier = 0.1;
