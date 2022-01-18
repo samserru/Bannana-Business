@@ -60,7 +60,7 @@ public class Sprite {
 		// the right but no moving.
 		y_direction = 0; // 0 for y direction means it's not moving vertically.
 
-		imageResource = new ImageResource("images/robot/", 8, 80);
+		imageResource = new ImageResource("images/robot/", 4, 80);
 		jumpCounter = -1;
 
 	}

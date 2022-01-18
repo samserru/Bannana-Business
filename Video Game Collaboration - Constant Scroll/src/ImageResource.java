@@ -32,7 +32,7 @@ public class ImageResource {
 
 
 	public ImageResource(String imagePath, int imageMax, int imageOffset) {
-		runningImages = new ImageIcon[5];
+		runningImages = new ImageIcon[imageMax];
 		jumpingImages = new ImageIcon[imageMax];
 		slidingImages = new ImageIcon[imageMax];
 		heartImages = new ImageIcon[2];

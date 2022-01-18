@@ -66,7 +66,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 	public GraphicsPanel() throws IOException{
 
 		//allows for us to display the hearts for lives
-		imageResource = new ImageResource("images/robot/", 8, 80);
+		imageResource = new ImageResource("images/robot/", 4, 80);
 		heartImages = imageResource.getHealth();
 		coverMonkey = new Item(10, 100 , "images/robot/cover monkey.jpg", 4);
 
