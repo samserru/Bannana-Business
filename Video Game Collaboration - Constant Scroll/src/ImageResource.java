@@ -92,10 +92,10 @@ public class ImageResource {
 
 	public void updateImage(int x_direction, boolean jumping, boolean isDead, boolean sliding) {
 		counter++;
-		if(counter>3) {
+		if(counter>9) {
 			imageRefreshCounter++;
 
-			if(imageRefreshCounter >= IMAGE_REFRESH_MAX && imageCount < imageMax - 2) {
+			if(imageRefreshCounter >= IMAGE_REFRESH_MAX && imageCount < imageMax - 1) {
 				imageCount++;
 				imageRefreshCounter = 0;
 			}	

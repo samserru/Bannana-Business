@@ -195,8 +195,8 @@ public class Sprite {
 		Graphics2D g2 = (Graphics2D)g;
 
 
-		g2.drawImage(imageResource.getImage().getImage(), x_coordinate + imageResource.getImage().getIconWidth(),
-				y_coordinate, imageResource.getImage().getIconWidth(), imageResource.getImage().getIconHeight(), null);
+		g2.drawImage(imageResource.getImage().getImage(), x_coordinate + imageResource.getImage().getIconWidth()-500,
+				y_coordinate-400, imageResource.getImage().getIconWidth(), imageResource.getImage().getIconHeight(), null);
 
 	}
 

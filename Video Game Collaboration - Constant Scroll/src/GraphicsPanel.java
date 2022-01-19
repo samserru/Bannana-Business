@@ -91,7 +91,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		//gives break time to player so one object doesn't automatically kill them
 		indestructable = false;
 		counterIndestructable=500;
-		spawnrate=20000;
+		spawnrate=30000;
 
 		//allows for the game to get progressively harder
 		levelUp=600;
@@ -537,7 +537,7 @@ public class GraphicsPanel extends JPanel implements KeyListener{
 		indestructable = false;
 		levelUp=200;
 		lives=3;
-		spawnrate = 20000;
+		spawnrate = 30000;
 
 		// The Item constructor has 4 parameters - the x coordinate, y coordinate
 		// the path for the image, and the scale. The scale is used to make the
